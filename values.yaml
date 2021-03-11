@@ -1,7 +1,7 @@
 name: snyk-broker
 
 image:
-  tag: 4.71.0-gitlab
+  tag: github-enterprise
   repository: snyk/broker
   pullPolicy: IfNotPresent
 
@@ -14,11 +14,13 @@ resources:
     cpu: 200m
     memory: 200Mi
 
-gitlab:
-#  url: your.gitlab.domain.com
-#  token: secret-gitlab-token
+github:
+#  url: your.github.domain.com
+#  api_url: your.github.domain.com/api/v3
+#  graphql_url: your.github.domain.com/api
+#  token: secret-github-token
   useExistingSecret: false
-  secretName: gitlab-token
+  secretName: github-token
   secretKey: token
 
 broker:

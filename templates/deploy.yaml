@@ -53,13 +53,17 @@ spec:
             secretKeyRef:
               name: {{ .Values.broker.secretName }}
               key: {{ .Values.broker.secretKey }}
-        - name: GITLAB_TOKEN
+        - name: GITHUB_TOKEN
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.gitlab.secretName }}
-              key: {{ .Values.gitlab.secretKey }}
-        - name: GITLAB
-          value: {{ .Values.gitlab.url }}
+              name: {{ .Values.github.secretName }}
+              key: {{ .Values.github.secretKey }}
+        - name: GITHUB
+          value: {{ .Values.github.url }}
+        - name: GITHUB_API
+          value: {{ .Values.github.api_url }}
+        - name: GITHUB_GRAPHQL
+          value: {{ .Values.github.graphql_url }}
         - name: BROKER_CLIENT_URL
           value: {{ .Values.broker.url }}
         - name: PORT

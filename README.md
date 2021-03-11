@@ -1,10 +1,10 @@
 # helm-chart-snyk-broker
 
-Helm chart used to deploy a [Snyk Broker](https://github.com/snyk/broker) into Kubernetes. Currently only supports GitLab as the SCM.
+Helm chart used to deploy a [Snyk Broker](https://github.com/snyk/broker) into Kubernetes. Currently supports GitHub Enterprise as the SCM.
 
 ### Requirements
 
-This chart requires already having generated a Snyk Broker token and GitLab token.
+This chart requires already having generated a Snyk Broker token and GitHub Enterprise token.
 
 ### Installing the Chart
 
@@ -29,16 +29,18 @@ The following table lists the configurable parameters of the Event Exporter char
 | Parameter                  | Description                                                                                            | Default value                                                                 |
 | :-----------------------   | :----------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------- |
 | `name`                     | Release name                                                                                           | `snyk-broker`                                                                 |
-| `image.tag`                | Broker image tag                                                                                       | `4.71.0-gitlab`                                                               |
+| `image.tag`                | Broker image tag                                                                                       | `github-enterprise`                                                               |
 | `image.repository`         | Image repository                                                                                       | `snyk/broker`                                                                 |
 | `image.pullPolicy`         | Image pull policy                                                                                      | `IfNotPresent`                                                                |
 | `replicas`                 | Desired number of Broker pods                                                                          | `1`                                                                           |
 | `resources`                | Broker pod CPU/memory resource requests/limits                                                         | `{requests: {cpu: 200m, memory: 200Mi}, limits: {cpu: 300m, memory: 300Mi }}` |
-| `gitlab.url`               | Hostname of your GitLab deployment                                                                     | None                                                                          |
-| `gitlab.token`             | GitLab personal access token with `api` scope                                                          | None                                                                          |
-| `gitlab.useExistingSecret` | Whether a GitLab token secret already exists, if set to `false` one will be automatically generated    | `false`                                                                       |
-| `gitlab.secretName`        | GitLab token secret name                                                                               | `gitlab-token`                                                                |
-| `gitlab.secretKey`         | Key under which the GitLab token is found in the secret                                                | `token`                                                                       |
+| `github.url`               | Hostname of your GitHub Enterprise deployment                                                                     | None                                                                          |
+| `github.api_url`               | API endpoint of your GitHub Enterprise deployment                                                                     | None                                                                          |
+| `github.graphql_url`               | graphql endpoint of your GitHub Enterprise deployment                                                                     | None                                                                          |
+| `github.token`             | GitHub Enterprise personal access token with full repo, read:org and admin:repo_hook scopes                                                       | None                                                                          |
+| `github.useExistingSecret` | Whether a GitHub Enterprise token secret already exists, if set to `false` one will be automatically generated    | `false`                                                                       |
+| `github.secretName`        | GitHub Enterprise token secret name                                                                               | `github-token`                                                                |
+| `github.secretKey`         | Key under which the GitHub Enterprise token is found in the secret                                                | `token`                                                                       |
 | `broker.url`               | The address at which the Broker client will be accessible                                              | None                                                                          |
 | `broker.token`             | Snyk Broker token                                                                                      | None                                                                          |
 | `broker.useExistingSecret` | Whether a Broker token secret already exists, if set to `false` one will be automatically generated    | `false`                                                                       |
