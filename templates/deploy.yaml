@@ -53,13 +53,13 @@ spec:
             secretKeyRef:
               name: {{ .Values.broker.secretName }}
               key: {{ .Values.broker.secretKey }}
-        - name: GITLAB_TOKEN
+        - name: CR_CREDENTIALS
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.gitlab.secretName }}
-              key: {{ .Values.gitlab.secretKey }}
-        - name: GITLAB
-          value: {{ .Values.gitlab.url }}
+              name: {{ .Values.cr.secretName }}
+              key: {{ .Values.cr.secretKey }}
+        - name: CR_AGENT_URL
+          value: {{ .Values.cr.url }}
         - name: BROKER_CLIENT_URL
           value: {{ .Values.broker.url }}
         - name: PORT

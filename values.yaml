@@ -1,7 +1,7 @@
 name: snyk-broker
 
 image:
-  tag: 4.71.0-gitlab
+  tag: container-registry-agent
   repository: snyk/broker
   pullPolicy: IfNotPresent
 
@@ -14,11 +14,11 @@ resources:
     cpu: 200m
     memory: 200Mi
 
-gitlab:
-#  url: your.gitlab.domain.com
-#  token: secret-gitlab-token
+cr:
+#  url: your.cr.domain.com:port
+#  credentials: secret-cr-credentials
   useExistingSecret: false
-  secretName: gitlab-token
+  secretName: cr-credentials
   secretKey: token
 
 broker:

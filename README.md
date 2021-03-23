@@ -1,10 +1,10 @@
 # helm-chart-snyk-broker
 
-Helm chart used to deploy a [Snyk Broker](https://github.com/snyk/broker) into Kubernetes. Currently only supports GitLab as the SCM.
+Helm chart used to deploy a [Snyk Broker](https://github.com/snyk/broker) into Kubernetes. Currently only supports container registries.
 
 ### Requirements
 
-This chart requires already having generated a Snyk Broker token and GitLab token.
+This chart requires already having generated a Snyk Broker token and ACR credentials.
 
 ### Installing the Chart
 
@@ -29,16 +29,16 @@ The following table lists the configurable parameters of the Event Exporter char
 | Parameter                  | Description                                                                                            | Default value                                                                 |
 | :-----------------------   | :----------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------- |
 | `name`                     | Release name                                                                                           | `snyk-broker`                                                                 |
-| `image.tag`                | Broker image tag                                                                                       | `4.71.0-gitlab`                                                               |
+| `image.tag`                | Broker image tag                                                                                       | `container-registry-agent`                                                    |
 | `image.repository`         | Image repository                                                                                       | `snyk/broker`                                                                 |
 | `image.pullPolicy`         | Image pull policy                                                                                      | `IfNotPresent`                                                                |
 | `replicas`                 | Desired number of Broker pods                                                                          | `1`                                                                           |
 | `resources`                | Broker pod CPU/memory resource requests/limits                                                         | `{requests: {cpu: 200m, memory: 200Mi}, limits: {cpu: 300m, memory: 300Mi }}` |
-| `gitlab.url`               | Hostname of your GitLab deployment                                                                     | None                                                                          |
-| `gitlab.token`             | GitLab personal access token with `api` scope                                                          | None                                                                          |
-| `gitlab.useExistingSecret` | Whether a GitLab token secret already exists, if set to `false` one will be automatically generated    | `false`                                                                       |
-| `gitlab.secretName`        | GitLab token secret name                                                                               | `gitlab-token`                                                                |
-| `gitlab.secretKey`         | Key under which the GitLab token is found in the secret                                                | `token`                                                                       |
+| `cr.url`             | URL of your CR agent (including scheme and - port) to which brokered requests would be forwarded.      | None                                                                          |
+| `cr.credentials`           | Base64-encoded credentials json used by agent to access container registry                             | None                                                                          |
+| `cr.useExistingSecret`     | Whether a CR token secret already exists, if set to `false` one will be automatically generated        | `false`                                                                       |
+| `cr.secretName`            | CR token secret name                                                                                   | `cr-token`                                                                |
+| `cr.secretKey`             | Key under which the CR token is found in the secret                                                    | `token`                                                                       |
 | `broker.url`               | The address at which the Broker client will be accessible                                              | None                                                                          |
 | `broker.token`             | Snyk Broker token                                                                                      | None                                                                          |
 | `broker.useExistingSecret` | Whether a Broker token secret already exists, if set to `false` one will be automatically generated    | `false`                                                                       |
