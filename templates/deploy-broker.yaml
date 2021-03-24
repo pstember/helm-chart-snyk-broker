@@ -1,21 +1,23 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ template "fullname" . }}-broker
   labels:
     app: {{ .Values.name }}
-{{- if .Values.deployment.labels }}
-{{ toYaml .Values.deployment.labels | indent 4 }}
+    component: broker
+{{- if .Values.deployment.broker.labels }}
+{{ toYaml .Values.deployment.broker.labels | indent 4 }}
 {{- end }}
-{{- if .Values.deployment.annotations }}
+{{- if .Values.deployment.broker.annotations }}
   annotations:
-{{ toYaml .Values.deployment.annotations | indent 4 }}
+{{ toYaml .Values.deployment.broker.annotations | indent 4 }}
 {{- end }}
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: {{ .Values.replicas.broker }}
   selector:
     matchLabels:
       app: {{ .Values.name }}
+      component: broker
   strategy:
     rollingUpdate:
       maxSurge: 20%
@@ -25,26 +27,27 @@ spec:
     metadata:
       labels:
         app: {{ template "fullname" . }}
+        component: broker
     spec:
       containers:
-      - name: {{ .Values.name }}
-        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+      - name: {{ .Values.name }}-broker
+        image: {{ .Values.images.broker.repository }}:{{ .Values.images.broker.tag }}
+        imagePullPolicy: {{ .Values.images.broker.pullPolicy }}
         ports:
-        - containerPort: {{ .Values.service.targetPort }}
+        - containerPort: {{ .Values.service.broker.targetPort }}
           protocol: TCP
         resources:
-{{ toYaml .Values.resources | indent 10 }}
+{{ toYaml .Values.resources.broker | indent 10 }}
         livenessProbe:
           httpGet:
             path: /healthcheck
-            port: {{ .Values.service.targetPort }}
+            port: {{ .Values.service.broker.targetPort }}
           initialDelaySeconds: 5
           periodSeconds: 30
         readinessProbe:
           httpGet:
             path: /healthcheck
-            port: {{ .Values.service.targetPort }}
+            port: {{ .Values.service.broker.targetPort }}
           initialDelaySeconds: 5
           periodSeconds: 5
         env:
@@ -63,7 +66,7 @@ spec:
         - name: BROKER_CLIENT_URL
           value: {{ .Values.broker.url }}
         - name: PORT
-          value: "{{ .Values.service.targetPort }}"
+          value: "{{ .Values.service.broker.targetPort }}"
 {{- if .Values.ca }}
         - name: CA_CERT
           value: {{ .Values.ca }}

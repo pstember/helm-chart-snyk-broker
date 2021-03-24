@@ -1,5 +1,4 @@
 {{- if .Values.ingress.enabled -}}
-{{- $servicePort := .Values.service.port -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -15,15 +14,24 @@ metadata:
 {{- end }}
 spec:
   rules:
-  {{- range .Values.ingress.hosts }}
+  {{- range .Values.ingress.hosts.broker }}
   - host: {{ . }}
     http:
       paths:
       - backend:
-          serviceName: {{ template "fullname" $ }}
-          servicePort: {{ $servicePort }}
+          serviceName: {{ template "fullname" $ }}-broker
+          servicePort: {{ .Values.service.broker.port }}
         path: /
   {{- end }}
+  {{- range .Values.ingress.hosts.cr-agent }}
+  - host: {{ . }}
+    http:
+      paths:
+      - backend:
+          serviceName: {{ template "fullname" $ }}-cr-agent
+          servicePort: {{ .Values.service.cr-agent.port }}
+        path: /
+  {{- end }}  
 {{- if .Values.ingress.tls }}
   tls:
 {{ toYaml .Values.ingress.tls | indent 4 }}

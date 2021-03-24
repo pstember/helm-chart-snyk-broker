@@ -1,18 +1,34 @@
-name: snyk-broker
+name: snyk-cr-broker
 
-image:
-  tag: container-registry-agent
-  repository: snyk/broker
-  pullPolicy: IfNotPresent
+images:
+  broker:
+    tag: container-registry-agent
+    repository: snyk/broker
+    pullPolicy: IfNotPresent
+  cr-agent:
+    tag: latest
+    repository: snyk/container-registry-agent
+    pullPolicy: IfNotPresent
 
-replicas: 1
+replicas: 
+  broker: 1
+  cr-agent: 1
+
 resources:
-  limits:
-    cpu: 300m
-    memory: 300Mi
-  requests:
-    cpu: 200m
-    memory: 200Mi
+  broker:
+    limits:
+      cpu: 300m
+      memory: 300Mi
+    requests:
+      cpu: 200m
+      memory: 200Mi
+  cr-agent:
+    limits:
+      cpu: 300m
+      memory: 300Mi
+    requests:
+      cpu: 200m
+      memory: 200Mi
 
 cr:
 #  url: your.cr.domain.com:port
@@ -31,16 +47,29 @@ broker:
 #ca: /private/ca.cert.pem
 
 deployment:
-  annotations: {}
-  labels: {}
+  broker:
+    annotations: {}
+    labels: {}
+  cr-agent:
+    annotations: {}
+    labels: {}
 
 service:
-  type: ClusterIP
-  port: 8000
-  targetPort: 8000
-#  nodePort: 31111
-  annotations: {}
-  labels: {}
+  broker:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+  #  nodePort: 31111
+    annotations: {}
+    labels: {}
+  cr-agent:
+    type: ClusterIP
+    port: 8081
+    targetPort: 8081
+  #  nodePort: 31111
+    annotations: {}
+    labels: {}
+
 
 ingress:
   enabled: false
@@ -48,8 +77,9 @@ ingress:
   annotations: {}
 #    kubernetes.io/ingress.class: nginx
 #  hosts:
-#    - my.broker.client
+#    broker: 
+#      - my.broker.client
+#    cr-agent: 
+#      - my.cr.agent
 #  tls:
 #    - secretName: snyk-broker-certs
-
-
