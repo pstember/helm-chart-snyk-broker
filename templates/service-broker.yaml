@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}-broker
+  labels:
+    app: {{ .Values.name }}
+    component: broker
+{{- if .Values.service.broker.labels }}
+{{ toYaml .Values.service.broker.labels | indent 4 }}
+{{- end }}
+{{- if .Values.service.broker.annotations }}
+  annotations:
+{{ toYaml .Values.service.broker.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.service.broker.type }}
+  ports:
+  - port: {{ .Values.service.broker.port }}
+    protocol: TCP
+    targetPort: {{ .Values.service.broker.targetPort }}
+{{ if (and (eq .Values.service.broker.type "NodePort") (not (empty .Values.service.broker.nodePort))) }}
+    nodePort: {{ .Values.service.broker.nodePort }}
+{{ end }}
+  selector:
+    app: {{ .Values.name }}
+    component: broker
+  sessionAffinity: None

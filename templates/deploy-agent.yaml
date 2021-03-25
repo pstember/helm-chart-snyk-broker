@@ -1,0 +1,59 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-cr-agent
+  labels:
+    app: {{ .Values.name }}
+    component: cr-agent
+{{- if .Values.deployment.cr-agent.labels }}
+{{ toYaml .Values.deployment.cr-agent.labels | indent 4 }}
+{{- end }}
+{{- if .Values.deployment.cr-agent.annotations }}
+  annotations:
+{{ toYaml .Values.deployment.cr-agent.annotations | indent 4 }}
+{{- end }}
+spec:
+  replicas: {{ .Values.replicas.cr-agent }}
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+      component: cr-agent
+  strategy:
+    rollingUpdate:
+      maxSurge: 20%
+      maxUnavailable: 20%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+        component: cr-agent
+    spec:
+      containers:
+      - name: {{ .Values.name }}-cr-agent
+        image: {{ .Values.images.cr-agent.repository }}:{{ .Values.images.cr-agent.tag }}
+        imagePullPolicy: {{ .Values.images.cr-agent.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.cr-agent.targetPort }}
+          protocol: TCP
+        resources:
+{{ toYaml .Values.resources.cr-agent | indent 10 }}
+        livenessProbe:
+          httpGet:
+            path: /healthcheck
+            port: {{ .Values.service.cr-agent.targetPort }}
+          initialDelaySeconds: 5
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /healthcheck
+            port: {{ .Values.service.cr-agent.targetPort }}
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        env:
+        - name: SNYK_PORT
+          value: "{{ .Values.service.cr-agent.targetPort }}"
+{{- if .Values.ca }}
+        - name: CA_CERT
+          value: {{ .Values.ca }}
+{{- end }}
